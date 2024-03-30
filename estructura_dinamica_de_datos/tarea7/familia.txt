@@ -1,0 +1,4 @@
+sara;abraham;isaac;raichel
+kinyerly;isaac;maria
+raichel;pedro;andrea;omar
+lucia;omar;;
