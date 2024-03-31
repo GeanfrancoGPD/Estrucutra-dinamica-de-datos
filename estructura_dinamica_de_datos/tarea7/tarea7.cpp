@@ -32,7 +32,7 @@ class Arbol{
     void insertar(T valor, Nodo<T> *&nodo);
     Nodo<T> *regresarAraiz();
     void mostrarArbol(Nodo<T> *newnodo, int espacio);
-    void eliminar (T &valor, Nodo<T> *&nodo);
+    void eliminar (string &valor, Nodo<T> *&nodo);
     bool vacio();
     bool vacioNodo(Nodo<T> *nodo);
     bool isLeaf(Nodo<T> *nodo); //Verifica si el nodo es un Hijo o un padre
@@ -40,11 +40,50 @@ class Arbol{
     void in_orden(Nodo<T> *nodo);
     void pre_orden(Nodo<T> *nodo);
     
-    Nodo<T> *EncontrarMadre(Nodo<T> *newnodo, T P);
     Nodo<T> *EncontrarSucesor(Nodo<T> *nodo);
     ~Arbol();
 
 };
+
+template < class T>
+void Arbol<T>::eliminar (string &valor, Nodo<T> *&nodo){
+    if (nodo == NULL){
+        return;
+    }
+
+    if (nodo -> dato == valor ){
+        cout << "Eliminando..." << endl;
+        if (nodo -> der == NULL && (nodo -> medio == NULL && nodo -> izq == NULL)){
+            cout << "Eliminando un Nodo" << endl;
+            delete nodo;
+            nodo = NULL;
+            return;
+        }else if (nodo -> der != NULL && (nodo -> medio != NULL || nodo -> izq != NULL)){
+            cout << "Eliminando a una madre" << endl;
+
+            Nodo<T> *temp = nodo;
+            nodo = nodo -> der;
+            nodo -> medio = temp -> medio;
+            nodo -> izq = temp -> izq;
+            delete temp;
+            return;
+
+        }else if (nodo -> der != NULL && (nodo -> medio == NULL && nodo -> izq == NULL)){
+            cout << "Eliminando a una esposa" << endl;
+
+            Nodo<T> *temp = nodo;
+            nodo = nodo -> der;
+            delete temp;
+        }
+        
+    }
+    eliminar (valor,nodo -> izq);
+    eliminar (valor,nodo -> medio);
+    eliminar (valor,nodo -> der);
+
+}
+
+
 
 template <class T>
 Arbol<T>::Arbol(){
@@ -52,7 +91,7 @@ Arbol<T>::Arbol(){
 
 template <class T>
 void Arbol<T>::pre_orden(Nodo<T> *newnodo){
-    int lista = 0;
+    
     if(newnodo == NULL){
         return ;
     }else{
@@ -89,23 +128,6 @@ Nodo<T> *Arbol<T>::regresarAraiz(){
     return raiz;
 }
 
-template <class T>
-Nodo<T> *Arbol<T>::EncontrarMadre(Nodo<T> *newnodo, T P){
-    if (newnodo == NULL){
-        return NULL;
-    }
-
-    if (P.nombre == newnodo -> der -> dato){
-        return newnodo;
-    }
-
-    Nodo<T> *madreHijoMedio = EncontrarMadre(newnodo -> medio, P);
-    if (madreHijoMedio != NULL){
-        return madreHijoMedio;
-    }
-
-    return EncontrarMadre(newnodo -> izq, P);
-};
 template <class T>
 void Arbol<T>::mostrarArbol(Nodo<T> *newnodo, int espacio) {
     if (newnodo == NULL) {
@@ -178,6 +200,7 @@ int main (){
     fstream infile;
 
     string line,word;
+    string nombreEliminar;
     int count = 0;
     int nline = 0;
 
@@ -223,6 +246,15 @@ int main (){
     familia.insertar(mujer[3], raizArbol);
     
     familia.mostrarArbol(raizArbol, 0);
+    cout << endl;
     familia.pre_orden(raizArbol);
+    
+    cout << " " << endl;
+    cout << "Ingrese un nombre:" << endl;
+    cin >> nombreEliminar;
+    familia.eliminar(nombreEliminar, raizArbol);
+
+    cout << endl;
+    familia.mostrarArbol(raizArbol, 0);
     
 }

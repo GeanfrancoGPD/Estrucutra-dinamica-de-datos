@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/Geanfranco/Documents/programacion/estructuraDinamica/tarea7",
-      "program": "c:/Users/Geanfranco/Documents/programacion/estructuraDinamica/tarea7/build/Debug/outDebug",
+      "cwd": "c:/Users/Geanfranco/Documents/programacion/github/estructura_dinamica_de_datos/tarea7",
+      "program": "c:/Users/Geanfranco/Documents/programacion/github/estructura_dinamica_de_datos/tarea7/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
