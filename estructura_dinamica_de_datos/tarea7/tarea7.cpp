@@ -39,11 +39,29 @@ class Arbol{
     void post_orden(Nodo<T> *nodo);
     void in_orden(Nodo<T> *nodo);
     void pre_orden(Nodo<T> *nodo);
+
+    int hijoSoltero(Nodo<T> *nodo);
     
     Nodo<T> *EncontrarSucesor(Nodo<T> *nodo);
     ~Arbol();
 
 };
+
+template <class T>
+int Arbol<T>::hijoSoltero(Nodo<T> *nodo){
+    int cont = 0 ;
+    if (nodo == NULL){
+        return 0;
+    }
+
+    if(nodo -> der == NULL && nodo -> medio == NULL && nodo -> izq == NULL){
+        cont++;
+    }
+    cont += hijoSoltero(nodo -> izq);
+    cont += hijoSoltero(nodo -> medio);
+
+    return cont;
+}
 
 template < class T>
 void Arbol<T>::eliminar (string &valor, Nodo<T> *&nodo){
@@ -203,6 +221,7 @@ int main (){
     string nombreEliminar;
     int count = 0;
     int nline = 0;
+    int valor = 0;
 
     infile.open("../familia.txt");
 
@@ -250,11 +269,14 @@ int main (){
     familia.pre_orden(raizArbol);
     
     cout << " " << endl;
-    cout << "Ingrese un nombre:" << endl;
+    /*cout << "Ingrese un nombre:" << endl;
     cin >> nombreEliminar;
     familia.eliminar(nombreEliminar, raizArbol);
 
     cout << endl;
-    familia.mostrarArbol(raizArbol, 0);
+    familia.mostrarArbol(raizArbol, 0);*/
+
+    valor = familia.hijoSoltero(raizArbol);
+    cout << "La cantidad de hijos solteros es :" << valor - 3<<endl;
     
 }
