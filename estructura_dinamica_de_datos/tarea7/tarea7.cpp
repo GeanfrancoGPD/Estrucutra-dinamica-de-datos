@@ -276,6 +276,7 @@ int main (){
     string nombreEliminar;
     int count = 0;
     int nline = 0;
+    int resp = 0;
     int valor = 0;
     int valor2 = 0;
 
@@ -321,22 +322,64 @@ int main (){
     familia.insertar(mujer[1], raizArbol);
     familia.insertar(mujer[2], raizArbol);
     familia.insertar(mujer[3], raizArbol);
-    
-    familia.mostrarArbol(raizArbol, 0);
-    cout << endl;
-    familia.pre_orden(raizArbol);
-    
-    cout << " " << endl;
-    cout << "Ingrese un nombre:" << endl;
-    cin >> nombreEliminar;
-    familia.eliminar(nombreEliminar, raizArbol);
 
-    cout << endl;
-    familia.mostrarArbol(raizArbol, 0);
+    do{
+        cout << "|                    ***menu***                       |" << endl;
+        cout << "|_____________________________________________________|" << endl;
+        cout << "|1- Mostrar arbol acostado | 2- Eliminar Nodo         |" << endl;
+        cout << "|3- PreOrden               | 4- InOrden               |" << endl;
+        cout << "|5- PostOrden              | 6- Hijos solteros        |" << endl;
+        cout << "|7- Parejas sin hijos      | 8- Salir                 |" << endl;
+        cout << "|_____________________________________________________|" << endl;
+        cin >>  resp;
+        
 
-    /*valor = familia.hijoSoltero(raizArbol);
-    cout << "La cantidad de hijos solteros es :" << valor - 3 <<endl;
-    valor2 = familia.parejasSinHijos(raizArbol);
-    cout << "La cantidad de parejas sin hijos es: " << valor2 << endl;*/
+        switch(resp){
+            case 1:
+                familia.mostrarArbol(raizArbol, 0);
+            break;
+
+            case 2:
+                cout << " " << endl;
+                cout << "Ingrese un nombre:" << endl;
+                cin >> nombreEliminar;
+                familia.eliminar(nombreEliminar, raizArbol);
+
+                cout << endl;
+                familia.mostrarArbol(raizArbol, 0);
+
+            break;
+
+            case 3:
+                cout << endl;
+                familia.pre_orden(raizArbol);
+
+            break;
+
+            case 4:
+                cout << endl;
+                familia.in_orden(raizArbol);
+            break;
+
+            case 5:
+                cout << endl;
+                familia.post_orden(raizArbol);
+            break;
+
+            case 6:
+                valor = familia.hijoSoltero(raizArbol);
+                cout << "La cantidad de hijos solteros es :" << valor - 3 <<endl;
+            break;
+
+            case 7:
+                valor2 = familia.parejasSinHijos(raizArbol);
+                cout << "La cantidad de parejas sin hijos es: " << valor2 << endl;
+
+            break;
+        }
+
+        system("pause");
+        system("cls");
+    }while (resp != 8);
     
 }
