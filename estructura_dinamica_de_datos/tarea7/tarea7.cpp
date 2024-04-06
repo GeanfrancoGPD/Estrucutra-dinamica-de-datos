@@ -8,6 +8,7 @@ using namespace std;
 template <class T>
 struct Persona{
     string nombre;
+    string genero;
     string papa;
     string hijo1;
     string hijo2;
@@ -43,7 +44,7 @@ class Arbol{
     int hijoSoltero(Nodo<T> *nodo);
     int parejasSinHijos(Nodo<T> *nodo);
     
-    Nodo<T> *EncontrarSucesor(Nodo<T> *nodo);
+    Nodo<T> *EncontrarSucesor(Nodo<T> *nodo, T P);
     ~Arbol();
 
 };
@@ -194,8 +195,8 @@ void Arbol<T>::mostrarArbol(Nodo<T> *newnodo, int espacio) {
 
 template <class T>
 void Arbol<T>::insertar(T P, Nodo<T> *&newnodo){
-    int cont = 0;
-    if (newnodo == NULL){
+    
+    if (newnodo == NULL || newnodo ->dato == P.nombre ){
         newnodo = new Nodo<T>();
         newnodo -> dato = P.nombre;
 
@@ -215,13 +216,49 @@ void Arbol<T>::insertar(T P, Nodo<T> *&newnodo){
     }else if(P.nombre == newnodo -> izq -> dato || P.papa == newnodo -> izq -> dato ){
         newnodo -> izq = NULL;
         insertar(P, newnodo -> izq);
-    }else if (cont == 0){
-        cont ++;
-        insertar(P, newnodo -> medio);
-    }else if (cont == 1 ){
-        insertar(P, newnodo -> izq);
+    }else{
+        
+        Nodo<T> *nodoBuscar = new Nodo<T>();
+        nodoBuscar = EncontrarSucesor(newnodo,  P);
+        
+        nodoBuscar -> dato = P.nombre;
+        
+        nodoBuscar -> der = new Nodo <T> ();
+        nodoBuscar -> der -> dato = P.papa;
+
+        nodoBuscar -> medio = new Nodo<T>();
+        nodoBuscar -> medio -> dato = P.hijo2;
+
+        nodoBuscar -> izq = new Nodo<T>();
+        nodoBuscar -> izq -> dato = P.hijo1;
+
     }
 }
+
+template < class T>
+Nodo<T> *Arbol<T>::EncontrarSucesor(Nodo<T> *newnodo, T P){
+    if (newnodo == NULL){
+        return NULL;
+    }
+
+    if(newnodo -> dato == P.nombre || newnodo -> dato == P.papa){
+        return newnodo;
+    }else{
+        Nodo<T> *resultado = EncontrarSucesor(newnodo -> izq, P);
+
+        if (resultado == NULL){
+            resultado = EncontrarSucesor(newnodo -> medio, P);
+        }
+
+        if (resultado == NULL){
+            resultado = EncontrarSucesor(newnodo -> der, P);
+        }
+
+        return resultado;
+    }
+}
+
+
 
 template <class T>
 Arbol<T>::~Arbol(){
@@ -256,10 +293,12 @@ int main (){
             switch(count){
                 case 0:
                     mujer[nline].nombre = word;
+                    mujer[nline].genero = "F";
                 break;
 
                 case 1:
                     mujer[nline].papa = word;
+
                 break;
 
                 case 2:
