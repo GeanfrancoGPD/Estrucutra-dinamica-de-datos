@@ -20,6 +20,9 @@ struct Nodo{
     Nodo<T> *der;
     Nodo<T> *medio;
     Nodo<T> *izq;
+    string hijo1;
+    string hijo2;
+    string genero;
 };
 
 template <class T>
@@ -40,6 +43,10 @@ class Arbol{
     void post_orden(Nodo<T> *nodo);
     void in_orden(Nodo<T> *nodo);
     void pre_orden(Nodo<T> *nodo);
+    void mostrarPlantilla(Nodo<T> *nodo, int nivel);
+
+    //para que diferencie los nombres entre masculino y femenino
+    string asignarGenero(string nombre);
 
     int hijoSoltero(Nodo<T> *nodo);
     int parejasSinHijos(Nodo<T> *nodo);
@@ -48,6 +55,55 @@ class Arbol{
     ~Arbol();
 
 };
+
+template <class T>
+string Arbol<T>::asignarGenero(string nombre){
+    string terminacion = nombre.substr(nombre.length() - 2); // obtiene las 2 ultimas letras de un nombre
+
+    if(terminacion == "ra" || terminacion == "el" || terminacion == "ly" || terminacion == "ia" || terminacion == "ea"){
+        return "femenino";
+    }else if(terminacion == "am" || terminacion == "ac" || terminacion == "ro" || terminacion == "ar"){
+        return "masculino";
+    }else{
+        return "indeterminado";
+    }
+}
+template <class T>
+void Arbol<T>::mostrarPlantilla(Nodo<T> *newnodo, int nivel){
+    if (newnodo == NULL){
+        return;
+    }
+
+    if (newnodo -> dato != ""){
+
+        cout << "_____________________________" << endl;
+        cout << "|Nombre: " << newnodo -> dato << "  Nivel:" << nivel << endl;
+        if (newnodo -> der != NULL){
+            cout << "|Esposo: " << newnodo -> der -> dato << endl;
+        }else{
+            cout << "|Esposo: " << "Sin valor " << endl;
+        }
+
+        if (newnodo -> hijo1 != ""){
+            cout << "|Primer hijo: " << newnodo -> hijo1 << endl;
+        }else{
+            cout << "|Primer hijo: " << " Sin valor " << endl;
+        }
+
+        if(newnodo -> hijo2 != ""){
+            cout << "|Segundo hijo: " << newnodo -> hijo2 << endl;
+        }else{
+            cout << "|Segundo hijo: " << " Sin valor" << endl;
+        }
+       
+        cout << "|__________________________|" << endl;
+        cout << " " << endl;
+    }
+
+    mostrarPlantilla(newnodo -> izq, nivel + 1);
+    mostrarPlantilla(newnodo -> medio, nivel + 1);
+    
+}
 
 template <class T>
 int Arbol<T>::hijoSoltero(Nodo<T> *nodo){
@@ -195,19 +251,28 @@ void Arbol<T>::mostrarArbol(Nodo<T> *newnodo, int espacio) {
 
 template <class T>
 void Arbol<T>::insertar(T P, Nodo<T> *&newnodo){
+    string genero;
     
     if (newnodo == NULL || newnodo ->dato == P.nombre ){
         newnodo = new Nodo<T>();
         newnodo -> dato = P.nombre;
+        genero = asignarGenero(P.nombre);
+        newnodo -> genero = genero;
+        
 
         newnodo -> der = new Nodo <T> ();
         newnodo -> der -> dato = P.papa;
+        genero = asignarGenero(P.papa);
+        newnodo -> der -> genero = genero;
 
         newnodo -> medio = new Nodo<T>();
         newnodo -> medio -> dato = P.hijo2;
+        newnodo -> hijo2 = P.hijo2;
 
         newnodo -> izq = new Nodo<T>();
         newnodo -> izq -> dato = P.hijo1;
+        
+        newnodo -> hijo1 = P.hijo1;
       
     }else if(P.nombre == newnodo -> medio -> dato || P.papa == newnodo -> medio -> dato ){
         newnodo -> medio = NULL;
@@ -220,17 +285,24 @@ void Arbol<T>::insertar(T P, Nodo<T> *&newnodo){
         
         Nodo<T> *nodoBuscar = new Nodo<T>();
         nodoBuscar = EncontrarSucesor(newnodo,  P);
+        genero = asignarGenero(P.nombre);
+        newnodo -> genero = genero;
         
         nodoBuscar -> dato = P.nombre;
         
         nodoBuscar -> der = new Nodo <T> ();
         nodoBuscar -> der -> dato = P.papa;
+        genero = asignarGenero(P.papa);
+        nodoBuscar -> der -> genero = genero;
 
         nodoBuscar -> medio = new Nodo<T>();
         nodoBuscar -> medio -> dato = P.hijo2;
+        nodoBuscar -> hijo2 = P.hijo2;
 
         nodoBuscar -> izq = new Nodo<T>();
         nodoBuscar -> izq -> dato = P.hijo1;
+
+        nodoBuscar -> hijo1 = P.hijo1;
 
     }
 }
@@ -294,7 +366,6 @@ int main (){
             switch(count){
                 case 0:
                     mujer[nline].nombre = word;
-                    mujer[nline].genero = "F";
                 break;
 
                 case 1:
@@ -329,7 +400,8 @@ int main (){
         cout << "|1- Mostrar arbol acostado | 2- Eliminar Nodo         |" << endl;
         cout << "|3- PreOrden               | 4- InOrden               |" << endl;
         cout << "|5- PostOrden              | 6- Hijos solteros        |" << endl;
-        cout << "|7- Parejas sin hijos      | 8- Salir                 |" << endl;
+        cout << "|7- Parejas sin hijos      | 8- plantilla mujeres     |" << endl;
+        cout << "|9- Plantilla hombres      | 10- Salir                |" << endl;
         cout << "|_____________________________________________________|" << endl;
         cin >>  resp;
         
@@ -373,13 +445,22 @@ int main (){
 
             case 7:
                 valor2 = familia.parejasSinHijos(raizArbol);
-                cout << "La cantidad de parejas sin hijos es: " << valor2 << endl;
+                cout << "La cantidad de parejas sin hijos es: " << valor2 - 5 << endl;
+
+            break;
+
+            case 8:
+                familia.mostrarPlantilla(raizArbol, 0);
+
+            break;
+
+            case 9:
 
             break;
         }
 
         system("pause");
         system("cls");
-    }while (resp != 8);
+    }while (resp != 10);
     
 }
