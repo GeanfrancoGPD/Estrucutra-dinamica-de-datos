@@ -44,6 +44,7 @@ class Arbol{
     void in_orden(Nodo<T> *nodo);
     void pre_orden(Nodo<T> *nodo);
     void mostrarPlantilla(Nodo<T> *nodo, int nivel);
+    void mostarHombres (Nodo<T> *nodo, int nivel);
 
     //para que diferencie los nombres entre masculino y femenino
     string asignarGenero(string nombre);
@@ -68,6 +69,7 @@ string Arbol<T>::asignarGenero(string nombre){
         return "indeterminado";
     }
 }
+
 template <class T>
 void Arbol<T>::mostrarPlantilla(Nodo<T> *newnodo, int nivel){
     if (newnodo == NULL){
@@ -102,7 +104,42 @@ void Arbol<T>::mostrarPlantilla(Nodo<T> *newnodo, int nivel){
 
     mostrarPlantilla(newnodo -> izq, nivel + 1);
     mostrarPlantilla(newnodo -> medio, nivel + 1);
-    
+}
+
+template <class T>
+void Arbol<T>::mostarHombres(Nodo<T> *newnodo, int nivel){
+    if (newnodo-> der == NULL){
+        return;
+    }
+
+    if (newnodo -> der -> dato != ""){
+
+        cout << "_____________________________" << endl;
+        cout << "|Nombre: " << newnodo -> der -> dato << "  Nivel:" << nivel << endl;
+        if (newnodo -> der != NULL){
+            cout << "|Esposa: " << newnodo -> dato << endl;
+        }else{
+            cout << "|Esposa: " << "Sin valor " << endl;
+        }
+
+        if (newnodo -> hijo1 != ""){
+            cout << "|Primer hijo: " << newnodo -> hijo1 << endl;
+        }else{
+            cout << "|Primer hijo: " << " Sin valor " << endl;
+        }
+
+        if(newnodo -> hijo2 != ""){
+            cout << "|Segundo hijo: " << newnodo -> hijo2 << endl;
+        }else{
+            cout << "|Segundo hijo: " << " Sin valor" << endl;
+        }
+       
+        cout << "|__________________________|" << endl;
+        cout << " " << endl;
+    }
+
+    mostarHombres(newnodo -> izq, nivel + 1);
+    mostarHombres(newnodo -> medio, nivel + 1);
 }
 
 template <class T>
@@ -175,8 +212,6 @@ void Arbol<T>::eliminar (string &valor, Nodo<T> *&nodo){
     eliminar (valor,nodo -> der);
 
 }
-
-
 
 template <class T>
 Arbol<T>::Arbol(){
@@ -455,6 +490,7 @@ int main (){
             break;
 
             case 9:
+            familia.mostarHombres(raizArbol, 0);
 
             break;
         }
